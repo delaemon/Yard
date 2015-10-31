@@ -1,9 +1,6 @@
-import re
+# -*- coding: utf-8 -*-
 
-def left_associate(ope):
-    if ope == "**":
-        return False
-    return True
+import re
 
 def shunting_yard(arr):
     priority = {"*": 3, "/": 3, "%": 3, "+": 2, "-": 2, "**": 4}
@@ -18,29 +15,28 @@ def shunting_yard(arr):
             exist = False
             while len(stack) != 0:
                 a = stack.pop()
-                if a == "(":
+                if a is "(":
                     exist = True
                     break
                 else:
                     result.append(a)
-            if exist == False:
+            if not exist:
                 print "parenthesis error"
-                raise
+                raise Exception("parenthesis error")
         else:
             if len(stack) != 0 and stack[-1] != "(":
-                if (left_associate(data) and priority[data] <= priority[stack[-1]]) \
-                    or (left_associate(data) == False and priority[data] < priority[stack[-1]]):
+                if (not data == "**" and priority[data] <= priority[stack[-1]]) \
+                    or (data == "**" and priority[data] < priority[stack[-1]]):
                     result.append(stack.pop())
             stack.append(data)
 
-    if len(stack) == 0:
+    if len(stack) is 0:
         return result
 
     stack.reverse()
     for ope in stack:
-        if ope == "(" or ope == ")":
-            print "parenthesis error"
-            raise
+        if ope is "(" or ope is ")":
+            raise Exception("parenthesis error")
         result.append(ope)
 
     return result
@@ -80,19 +76,17 @@ def lexical_analysis(str):
     return arr
 
 def _calc(n1, n2, ope):
-    if n1 == None or n2 == None:
-        print "argument is not correct"
-        raise
+    if not n1 or not n2:
+        raise Exception ("operator is not correct")
     a = float(n1)
     b = float(n2)
-    if ope == "+" : return a + b
-    if ope == "-" : return a - b
-    if ope == "*" : return a * b
-    if ope == "/" : return a / b
-    if ope == "%" : return a % b
-    if ope == "**": return a ** b
-    print "operator is not correct"
-    raise
+    if ope is '+' : return a + b
+    if ope is '-' : return a - b
+    if ope is '*' : return a * b
+    if ope is '/' : return a / b
+    if ope is '%' : return a % b
+    if ope == "**" : return a ** b
+    raise Exception ("operator is not correct")
 
 def calculate(datas):
     num_stack = []
@@ -104,8 +98,7 @@ def calculate(datas):
             b = num_stack.pop()
             num_stack.append(_calc(b, a, data))
     if len(num_stack) != 1:
-        print "argument is not correct"
-        raise
+        raise Exception("argument is not correct")
 
     res = num_stack[0]
     if isinstance(res, float):
